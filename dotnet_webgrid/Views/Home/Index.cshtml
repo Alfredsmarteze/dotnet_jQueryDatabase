@@ -1,0 +1,141 @@
+﻿@model dotnet_webgrid.Models.User
+@{ ViewData["Title"] = "Home Page"; }
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+@*<link href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />*@
+
+
+
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <input type="hidden" asp-for="ID" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MiddleName" class="control-label"></label>
+                <input asp-for="MiddleName" class="form-control" />
+                <span asp-validation-for="MiddleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact" class="control-label"></label>
+                <input asp-for="Contact" class="form-control" />
+                <span asp-validation-for="Contact" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<br>
+
+<div class="text-center">
+
+    <table id="userTable" class="display" style="width:100%">
+        <thead>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+@*<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>*@
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+
+    function editUser(element) {
+        $("input[name='FirstName']").val(element.dataset.firstname);
+        $("input[name='LastName']").val(element.dataset.lastname);
+        $("input[name='MiddleName']").val(element.dataset.middlename);
+        $("input[name='Contact']").val(element.dataset.contact);
+    }
+
+        $(document).ready(function () {
+
+          var table = $('#userTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "orderMulti": false, // for disable multiple column at once
+                "ajax": {
+                    'url': '@Url.Action("getAllUsers", "Home")',
+                    "type": "GET",
+                    "datatype": "json"
+
+                },
+                //"columns": [
+                //    { "sTitle": "First Name", "data": "firstName" },
+                //    { "sTitle": "Last Name", "data": "lastName" },
+                //    { "sTitle": "Middle Name", "data": "middleName" },
+                //    { "sTitle": "Contact", "data": "contact" },
+                //    { "sTitle": "Action", "data":"ID",
+                //        "render": function (ID, type, full, meta) {
+
+                //            return '<button class="btn btn-primary">Edit</button> <button class="btn btn-danger">Delete</button>'
+
+                //        }
+                //    }
+                    //{@Url.Action("UserEdit", "Home")
+                    //    "sTitle": "Action",
+
+                    //},<a href="@Url.Action("UserEdit", "Home")" onclick="UserEdit(' + Id + ',' + full + ')">Edit</a>
+                            //"title": "Edit",
+                            //"data": "Id", '<a href="@Url.Action("UserEdit","Home")?id=' + data + '>Edit</a>'
+                            @*"render": function (data, type, full, meta) {
+                                return '<a href="@Url.Action("UserEdit","Home")?id=' + data + '>Edit</a>';*@
+               //]
+
+
+               "columns": [
+                   { "sTitle": "First Name", "data": "firstName" },
+                   { "sTitle": "Last Name", "data": "lastName" },
+                   { "sTitle": "Middle Name", "data": "middleName" },
+                   { "sTitle": "Contact", "data": "contact" },
+                   {
+                       "sTitle": "Action", "data": "ID",
+                       "render": function (data, type, row, meta) {
+                           
+                           console.log(row);
+                           if (row) {
+                               
+                               return `<button class="btn btn-primary"
+                                                    data-firstName="${row.firstName}"
+                                                    data-lastName="${row.lastName}"
+                                                    data-middleName="${row.middleName}"
+                                                    data-contact="${row.contact}"
+                                                    onclick="editUser(this)"
+                                                        >Edit</button> 
+                                                    <button class="btn btn-danger">Delete</button>`
+                           }
+
+                           return '';
+                           
+                       }
+                   }
+               ]
+             
+           });
+            
+           });
+
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

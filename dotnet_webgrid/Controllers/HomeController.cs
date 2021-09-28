@@ -23,36 +23,39 @@ namespace dotnet_webgrid.Controllers
         [HttpPost]
         public IActionResult Index(User user, int id)
         {
-            if (id >0 )
-            {
-                _appDBContext.users.Update(user);
-                _appDBContext.SaveChanges();
-            }
+            int ds = user.ID;
+            
+                if (ds > 0)
+                {
+                    _appDBContext.users.Update(user);
+                    _appDBContext.SaveChanges();
+                }
             else
             {
                 _appDBContext.users.Add(user);
                 _appDBContext.SaveChanges();
                 ModelState.Clear();
             }
-            return View();
+          
+          return View();
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            //var asdf = _appDBContext.users.SingleOrDefault(q => q.ID == id);
-            //User user1 = new User();
-            //if(id>0)
-            
-            //{            
-            //user1.FirstName = asdf.FirstName;
-            //user1.LastName = asdf.LastName;
-            //user1.Contact = asdf.Contact;
-            //user1.MiddleName = asdf.MiddleName;
+            var asdf = _appDBContext.users.SingleOrDefault(q => q.ID == id);
+            User user1 = new User();
+            if (id > 0)
 
-               
-            //}
-            //return View();
+            {
+                user1.FirstName = asdf.FirstName;
+                user1.LastName = asdf.LastName;
+                user1.Contact = asdf.Contact;
+                user1.MiddleName = asdf.MiddleName;
+
+
+            }
+            return View(user1);
         }
 
         public JsonResult getAllUsers()
@@ -65,9 +68,9 @@ namespace dotnet_webgrid.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserEdit(int id)
+        public IActionResult UserEdit(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
@@ -85,9 +88,9 @@ namespace dotnet_webgrid.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DeleteUser(int id)
+        public IActionResult DeleteUser(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
@@ -96,16 +99,17 @@ namespace dotnet_webgrid.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUser(int id, User userd)
+        public IActionResult DeleteUser(int id, User userd)
         {
-            if (id==null)
+            if (id ==0)
             {
                 return NotFound();
             }
+
             var qw = _appDBContext.users.Find(id);
-             _appDBContext.users.Remove(qw);
+            _appDBContext.users.Remove(qw);
             _appDBContext.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(new { row = qw });
         }
 
         public IActionResult Privacy()

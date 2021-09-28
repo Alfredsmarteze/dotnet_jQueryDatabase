@@ -107,15 +107,15 @@
 
     }
 
-    
+
     function DeleteRow(id) {
-        
+
             if (confirm("Are You sure to delete this record..?")) {
                 $.ajax({
 
                     type: 'POST',
                     //url: "/Products/delete/" + id,
-                    url: '@Url.Action("deleteuser", "home")/' + id ,
+                    url: '@Url.Action("deleteuser", "home")' ,
                     datatype: 'JSON',
                     //data: JSON.stringify({ id: id }),
                     success: function (response) {
@@ -133,7 +133,7 @@
                 });
             }
     }
-    
+
     $(document).ready(function () {
 
         var table = $('#userTable').DataTable({
@@ -157,9 +157,9 @@
                 {
                     "sTitle": "Action",
                     "render": function (data, type, row, meta) {
-                        console.log(row);
+                       // console.log(row);
 
-                        if (row) {
+                       // if (row) {
 
                             return `<button class="btn btn-primary"
 
@@ -175,11 +175,11 @@
                                                     data-middleName="${row.middleName}"
                                                     data-contact="${row.contact}"
                                                     data-id="${row.id}"
-                                                    onclick="DeleteRow()">Delete</a>`
+                                                    onclick="DeleteRow('@Url.Action("deleteuser","home")/${+row}')">Delete</a>`
 
-                        }
+                        //}
 
-                        return '';
+                        //return '';
 
                     },
 

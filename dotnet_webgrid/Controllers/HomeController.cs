@@ -99,14 +99,14 @@ namespace dotnet_webgrid.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteUser(int id, User userd)
+        public IActionResult DeleteUser(int row, User userd)
         {
-            if (id ==0)
+            if (row ==0)
             {
                 return NotFound();
             }
 
-            var qw = _appDBContext.users.Find(id);
+            var qw = _appDBContext.users.Find(row);
             _appDBContext.users.Remove(qw);
             _appDBContext.SaveChanges();
             return Json(new { row = qw });

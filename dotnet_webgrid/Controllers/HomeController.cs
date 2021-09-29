@@ -89,6 +89,18 @@ namespace dotnet_webgrid.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult DeleteAll(IEnumerable<int> delAll)
+        {
+            User assd = new User();
+            foreach (int item in delAll)
+            {
+                assd = _appDBContext.users.Find(item);
+                _appDBContext.Remove(assd);
+                _appDBContext.SaveChanges();
+            }
+            return RedirectToAction("Index");        
+        }
         [HttpGet]
         public IActionResult DeleteUser(int id)
         {
@@ -115,6 +127,8 @@ namespace dotnet_webgrid.Controllers
             return RedirectToAction("Index");
             
         }
+
+
 
         public IActionResult Privacy()
         {

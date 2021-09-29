@@ -79,16 +79,7 @@
 
     }
 
-    //function deleteUser(element) {
-    //    $("input[name='ID']").val(element.dataset.id);
-    //    $("input[name='FirstName']").val(element.dataset.firstname);
-    //    $("input[name='LastName']").val(element.dataset.lastname);
-    //    $("input[name='MiddleName']").val(element.dataset.middlename);
-    //    $("input[name='Contact']").val(element.dataset.contact);
-  //  }
-       var table;
-
-        function DeleteRow(id)
+    function DeleteRow(id)
         {
             if (confirm("Are You sure to delete this record..?")) {
                 $.ajax({
@@ -115,22 +106,6 @@
             }
         }
 
-
-
-        @*if (confirm('Want to delete data?'))
-        {
-            $.ajax({
-
-                type: "POST",
-                url: '@Url.Action("DeleteUser","Home")/' + id,
-                success: function (data) {
-
-                    if (data.success) {
-                        return @Url.Action("Index","Home")
-                    }
-                }
-            })
-        }*@
 
     $(document).ready(function () {
 

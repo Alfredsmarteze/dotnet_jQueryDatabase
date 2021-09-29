@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using dotnet_webgrid.Models;
 
+
 namespace dotnet_webgrid.Controllers
 {
     public class HomeController : Controller
@@ -29,7 +30,8 @@ namespace dotnet_webgrid.Controllers
                 {
                     _appDBContext.users.Update(user);
                     _appDBContext.SaveChanges();
-                }
+                    ModelState.Clear();
+            }
             else
             {
                 _appDBContext.users.Add(user);
@@ -99,17 +101,19 @@ namespace dotnet_webgrid.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteUser(int row, User userd)
+        public IActionResult DeleteUser(int id, User userd)
         {
-            if (row ==0)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var qw = _appDBContext.users.Find(row);
+            var qw = _appDBContext.users.Where(w=>w.ID==id).FirstOrDefault();
             _appDBContext.users.Remove(qw);
             _appDBContext.SaveChanges();
-            return Json(new { row = qw });
+            //return Json(new {success = true, message="Successfully Deleted" }, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Index");
+            
         }
 
         public IActionResult Privacy()

@@ -10,13 +10,13 @@ namespace dotnet_webgrid.Models
     {
         [Key]
         public int ID { get; set; }
-        //[Required]
+        [Required]
         public string FirstName { get; set; }
-        //[Required]
+        [Required]
         public string LastName { get; set; }
         //[Required]
         public string MiddleName { get; set; }
-        //[Required]
+        [Required]
         public string Contact { get; set; }
     }
 }

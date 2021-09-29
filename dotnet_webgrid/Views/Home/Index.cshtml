@@ -67,6 +67,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="~/lib/notify.min.js"></script>
 <script type="text/javascript">
 
     function editUser(element) {
@@ -78,15 +79,41 @@
 
     }
 
-    function deleteUser(element) {
-        $("input[name='ID']").val(element.dataset.id);
-        $("input[name='FirstName']").val(element.dataset.firstname);
-        $("input[name='LastName']").val(element.dataset.lastname);
-        $("input[name='MiddleName']").val(element.dataset.middlename);
-        $("input[name='Contact']").val(element.dataset.contact);
+    //function deleteUser(element) {
+    //    $("input[name='ID']").val(element.dataset.id);
+    //    $("input[name='FirstName']").val(element.dataset.firstname);
+    //    $("input[name='LastName']").val(element.dataset.lastname);
+    //    $("input[name='MiddleName']").val(element.dataset.middlename);
+    //    $("input[name='Contact']").val(element.dataset.contact);
+  //  }
+       var table;
 
+        function DeleteRow(id)
+        {
+            if (confirm("Are You sure to delete this record..?")) {
+                $.ajax({
 
+                    type: 'POST',
+                    url: '@Url.Action("deleteuser", "home")/'+id,
+                    datatype: 'JSON',
+                    //data: JSON.stringify({ id: id }),
+                    success: function (response) {
+                        if (response.success) {
+                            $.notify(response.message, {
+                                globalPosition: "top centre",
+                                className: "sucess"
+                            });
+                            window.location.reload();
+                        }
+                            table.row().remove().draw();
+                            //table.ajax.reload();
+                            
+                            //$("#myModal").modal('hide');
 
+                    },
+                });
+            }
+        }
 
 
 
@@ -105,38 +132,9 @@
             })
         }*@
 
-    }
-
-
-    function DeleteRow(id) {
-
-            if (confirm("Are You sure to delete this record..?")) {
-                $.ajax({
-
-                    type: 'POST',
-                    //url: "/Products/delete/" + id,
-                    url: '@Url.Action("deleteuser", "home")' ,
-                    datatype: 'JSON',
-                    //data: JSON.stringify({ id: id }),
-                    success: function (response) {
-                        if (response == "success") {
-
-                            alert("Data Deleted successfully..")
-                           // window.location.reload();
-                            //$("#myModal").modal('hide');
-                        };
-                    },
-                    error: function (msg) {
-                        alert(msg.responseText)
-                    },
-
-                });
-            }
-    }
-
     $(document).ready(function () {
 
-        var table = $('#userTable').DataTable({
+         table = $('#userTable').DataTable({
             "processing": true,
             /* "serverSide": true,*/
             "filter": true,
@@ -157,9 +155,9 @@
                 {
                     "sTitle": "Action",
                     "render": function (data, type, row, meta) {
-                       // console.log(row);
+                        console.log(row);
 
-                       // if (row) {
+                        if (row) {
 
                             return `<button class="btn btn-primary"
 
@@ -168,69 +166,40 @@
                                                     data-middleName="${row.middleName}"
                                                     data-contact="${row.contact}"
                                                     data-id="${row.id}"
-                                                    onclick="editUser(this)">Edit</button>  <a class=" btn btn-danger"
+                                                    onclick="editUser(this)">Edit</button>  <button class=" btn btn-danger"
 
                                                     data-firstName="${row.firstName}"
                                                     data-lastName="${row.lastName}"
                                                     data-middleName="${row.middleName}"
                                                     data-contact="${row.contact}"
                                                     data-id="${row.id}"
-                                                    onclick="DeleteRow('@Url.Action("deleteuser","home")/${+row}')">Delete</a>`
+                                                    onclick='DeleteRow(${row.id})'>Delete</button>`
+                             }
 
-                        //}
+                        return '';
+                            },},]});
 
-                        //return '';
+        //Selected row
+        $('tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
 
-                    },
-
-                },
-                  @*{'@Url.Action("deleteuser","home")/"${data}"'
-                      "sTitle": "ActionDelete", "data": "id",
-                      "render": function (data, type, row, meta) {
-
-                          `<button class='btn btn-danger' onclick=deletthis('@Url.Action("DeleteUser","Home")/+data+")'>Delete</button>`
-                      }
-
-                  }*@
-
-            ]
-
-
-
-
+            }
         });
-
-        //$('tbody').on('click', 'tr', function () {
-        //    if ($(this).hasClass('selected')) {
-        //        $(this).removeClass('selected');
-        //    }
-        //    else {
-        //        table.$('tr.selected').removeClass('selected');
-        //        $(this).addClass('selected');
-
-        //    }
-        //});
         //$('.btn-danger').on('click', function () {
-        //    table.row('.selected').remove().draw();
-        //    if (confirm("Want to delete records?")) {
+        //    table.row('.selected').remove().draw(true);
 
-        //    }
         //});
+     });
 
 
 
 
 
-
-
-        //var table = $('#userTable').DataTable();
-
-        //        $('#example tbody').on('click', 'userdelete', function () {
-        //    table
-        //        .row($(this).parents('tr'))
-        //        .remove()
-        //        .draw();
-    });
 
 </script>
 

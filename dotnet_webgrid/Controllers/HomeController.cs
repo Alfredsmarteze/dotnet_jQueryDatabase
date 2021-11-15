@@ -22,7 +22,7 @@ namespace dotnet_webgrid.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(User user, int id)
+        public IActionResult Index(User user)
         {
             int ds = user.ID;
             
@@ -99,7 +99,8 @@ namespace dotnet_webgrid.Controllers
                 _appDBContext.Remove(assd);
                 _appDBContext.SaveChanges();
             }
-            return RedirectToAction("Index");        
+            return Json(new {success = true, message="Successfully Deleted" }, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+            //return RedirectToAction("Index");        
         }
         [HttpGet]
         public IActionResult DeleteUser(int id)
@@ -123,6 +124,7 @@ namespace dotnet_webgrid.Controllers
             var qw = _appDBContext.users.Where(w=>w.ID==id).FirstOrDefault();
             _appDBContext.users.Remove(qw);
             _appDBContext.SaveChanges();
+            ViewData["deletedone"] = "Records successfully deleted.";
             //return Json(new {success = true, message="Successfully Deleted" }, System.Web.Mvc.JsonRequestBehavior.AllowGet);
             return RedirectToAction("Index");
             
